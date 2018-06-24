@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="ca6a984b-039c-447f-8244-4964d3bd6445" name="Netology" url="http://university.netology.ru/u/cibizov/ ">
+        <fileTransfer host="university.netology.ru" port="21" rootFolder="/hw17">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="21" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

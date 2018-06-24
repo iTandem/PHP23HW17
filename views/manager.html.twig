@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Task Manager</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header id="header">
+            <div class="container">
+                <p>Пользователь:&nbsp; {{user.login}} | 
+                    <a href="logout.php">Выйти</a>
+                </p>
+            </div>
+        </header>
+        
+        <h1>Task Manager</h1>
+        <form action="" method="post" accept-charset="utf-8">
+        {% if editTask %}
+            <input type="text" name="description" value="{{editTask.description}}" placeholder="Название" autofocus>
+            <input type="hidden" name="editId" value="{{editTask.id}}">
+            <input type="submit" name="submit" value="Изменить">
+        {% else %}
+            <input type="text" name="description" value="" placeholder="Название">
+            <input type="submit" name="submit" value="Добавить">
+        {% endif %}         
+        </form>
+        
+        <h2>Созданные задачи</h2>
+        {% if not tasks %}
+            <p><em>Нет задач</em></p>
+        {% else %}
+        <table>
+            <thead>
+                <tr>
+                    <th>№ п/п</th>
+                    <th>ID задачи</th>
+                    <th>Описание задачи</th>
+                    <th>Дата добавления</th>
+                    <th>Статус</th>
+                    <th>Действия</th>
+                    <th>Ответственный</th>
+                    <th>Автор</th>
+                    <th>Делегировать</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            {% for task in tasks %}
+                <tr>
+                    <td>{{loop.index}}</td>
+                    <td>{{task.id}}</td>
+                    <td>{{task.description}}</td>
+                    <td>{{task.date_added}}</td>
+                    {% if task.is_done %}
+                        <td class="task-done">Выполнено</td>
+                    {% else %}
+                        <td class="task-progress">В процессе</td>
+                    {% endif %}
+                    <td>
+                        <form action="" method="post" accept-charset="utf-8">
+                            <button type="submit" name="done" value="{{task.id}}" {{task.is_done or task.assigned_user != user.login ? 'disabled' : ''}}>Выполнить</button>
+                        </form>
+                        <form action="" method="post" accept-charset="utf-8">
+                            <button type="submit" name="edit" value="{{task.id}}">Изменить</button>
+                        </form>                            
+                        <form action="" method="post" accept-charset="utf-8">
+                            <button type="submit" name="delete" value="{{task.id}}" onclick="confirm('Вы действительно хотите удалить задание &laquo;{{task.description}}&raquo;')">Удалить</button>
+                        </form>
+                    </td>
+
+                    <td>{{task.assigned_user}}{{task.assigned_user == user.login ? ' (Вы)' : ''}}</td>
+                    <td>{{user.login}} (Вы)</td>
+                    <td>
+                        <form action="" method="post" accept-charset="utf-8">
+                            <select name="assignedUser">
+                            {% for u in users %}
+                                <option value="{{u.id}}">{{u.login}}</option>}
+                            {% endfor %}
+                            </select>
+                            <button type="submit" name="assign" value="{{task.id}}">Ок</button>  
+                        </form>
+                    </td>
+                </tr>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table> 
+    {% endif %}
+
+
+    <h2>Делегированные задачи</h2>
+    {% if not assignedTasks %}
+        <p><em>Нет задач</em></p>
+    {% else %}     
+        <table>
+            <thead>
+                <tr>
+                    <th>№ п/п</th>
+                    <th>ID задачи</th>
+                    <th>Описание задачи</th>
+                    <th>Дата добавления</th>
+                    <th>Статус</th>
+                    <th>Действия</th>
+                    <th>Ответственный</th>
+                    <th>Автор</th>
+                </tr>
+            </thead>
+            <tbody>
+               {% for task in assignedTasks %}              
+                <tr>
+                    <td>{{loop.index}}</td>
+                    <td>{{task.id}}</td>
+                    <td>{{task.description}}</td>
+                    <td>{{task.date_added}}</td>
+                    {% if task.is_done %}
+                        <td class="task-done">Выполнено</td>
+                    {% else %}
+                        <td class="task-progress">В процессе</td>
+                    {% endif %}
+                    <td>
+                        <form action="" method="post" accept-charset="utf-8">
+                            <button type="submit" name="done" value="{{task.id}}" {{task.is_done ? 'disabled' : ''}}>Выполнить</button>
+                        </form>
+                    </td>
+                    <td>{{user.login}} (Вы)</td>
+                    <td>{{task.user}}</td>                
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+    </div>
+</body>
+</html>
