@@ -2,19 +2,22 @@
     
     namespace Model;
     
-    class Task {
+    class Task
+    {
         private static $allowedOrders = ['asc', 'desc'];
         private static $allowedColumns = ['description', 'date_added', 'is_done'];
         
         private $pdo;
         
-        private static function checkedColumnAndOrder($columnOrder) {
+        private static function checkedColumnAndOrder($columnOrder)
+        {
             list($column, $order) = explode(' ', $columnOrder);
             
             return in_array($column, self::$allowedColumns) && in_array($order, self::$allowedOrders) ? $columnOrder : 'id asc';
         }
         
-        public function __construct($pdo) {
+        public function __construct($pdo)
+        {
             $this->pdo = $pdo;
             
         }
@@ -85,7 +88,7 @@
         
         public function insertTask($user, $descr)
         {
-            if($descr) {
+            if ($descr) {
                 $dt = new \Datetime();
                 $dt = $dt->format('Y-m-d H:i:s');
                 

@@ -10,8 +10,8 @@
         {
             parent::__construct($pdo, $twig);
             
-            if ($_POST['login'] ?? '' && $_POST['pass'] ?? '') {
-                
+            if (isset($_POST['login']) ? $_POST['login'] : '' && isset($_POST['pass']) ? $_POST['pass'] : '') {
+                //isset($_POST['pass']) ? $_POST['pass'] : '';
                 $login = $_POST['login'];
                 $pass = $_POST['pass'];
                 
@@ -24,8 +24,7 @@
                     
                     if ($selectedUser) {
                         $errorMsg = "Пользователь с таким именем уже зарегистрирован";
-                    }
-                    else {
+                    } else {
                         $user->add($login, $pass);
                     }
                 } elseif ($_POST['action'] == 'Войти') {
@@ -33,18 +32,18 @@
                         'login' => $login,
                         'password' => $pass
                     ]);
-                    if($selectedUser) {
+                    if ($selectedUser) {
                         $_SESSION['user'] = $selectedUser['id'];
                         header('Location:manager.php');
                     } else {
-                        $errorMsg = "Неверный логин или пароль";
+                        $errorMsg = 'Неверный логин или пароль';
                     }
                 }
             }
             
-            echo $twig->render('index.html.twig',[
-                'login' => $_POST['login'] ?? '',
-                'error' => nl2br($errorMsg ?? ''),
+            echo $twig->render('index.html.twig', [
+                'login' => isset($_POST['login']) ? $_POST['login'] : '',
+                'error' => nl2br(isset($errorMsg) ? $errorMsg : ''),
             ]);
         }
     }
